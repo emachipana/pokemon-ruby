@@ -5,12 +5,18 @@ require_relative "pokedex/moves"
 
 module Stats_mechanics
   def gen_new_stats
-    @current_stats[:hp] = ((2 * @base_stats[:hp] + @ind_values[:hp] + (@effort_values[:hp]/4).floor) * @level / 100 + @level + 10).floor
-    @current_stats[:attack] = ((2 * @base_stats[:attack] + @ind_values[:attack] + (@effort_values[:attack]/4).floor) * @level / 100 + 5).floor
-    @current_stats[:defense] = ((2 * @base_stats[:defense] + @ind_values[:defense] + (@effort_values[:defense]/4).floor) * @level / 100 + 5).floor
-    @current_stats[:special_attack] = ((2 * @base_stats[:special_attack] + @ind_values[:special_attack] + (@effort_values[:special_attack]/4).floor) * @level / 100 + 5).floor
-    @current_stats[:special_defense] = ((2 * @base_stats[:special_defense] + @ind_values[:special_defense] + (@effort_values[:special_defense]/4).floor) * @level / 100 + 5).floor
-    @current_stats[:speed] = ((2 * @base_stats[:speed] + @ind_values[:speed] + (@effort_values[:speed]/4).floor) * @level / 100 + 5).floor
+    @current_stats[:hp] =
+      ((((2 * @base_stats[:hp]) + @ind_values[:hp] + (@effort_values[:hp] / 4).floor) * @level / 100) + @level + 10).floor
+    @current_stats[:attack] =
+      ((((2 * @base_stats[:attack]) + @ind_values[:attack] + (@effort_values[:attack] / 4).floor) * @level / 100) + 5).floor
+    @current_stats[:defense] =
+      ((((2 * @base_stats[:defense]) + @ind_values[:defense] + (@effort_values[:defense] / 4).floor) * @level / 100) + 5).floor
+    @current_stats[:special_attack] =
+      ((((2 * @base_stats[:special_attack]) + @ind_values[:special_attack] + (@effort_values[:special_attack] / 4).floor) * @level / 100) + 5).floor
+    @current_stats[:special_defense] =
+      ((((2 * @base_stats[:special_defense]) + @ind_values[:special_defense] + (@effort_values[:special_defense] / 4).floor) * @level / 100) + 5).floor
+    @current_stats[:speed] =
+      ((((2 * @base_stats[:speed]) + @ind_values[:speed] + (@effort_values[:speed] / 4).floor) * @level / 100) + 5).floor
   end
 end
 
@@ -18,7 +24,8 @@ class Pokemon
   include Stats_mechanics
 
   attr_reader :species, :type, :growth_rate, :moves, :ind_values, :base_exp
-  attr_accessor :name, :exp, :effort_values, :effort_points, :base_stats, :level, :current_stats, :current_hp, :current_move
+  attr_accessor :name, :exp, :effort_values, :effort_points, :base_stats, :level, :current_stats, :current_hp,
+                :current_move
 
   def initialize(choice, name, level)
     poke = Pokedex::POKEMONS[choice]
@@ -37,14 +44,13 @@ class Pokemon
 
     values_gen = Array.new(6) { rand(0..31) }
     keys = @base_stats.keys
-    @ind_values = Hash[keys.zip(values_gen)]
+    @ind_values = keys.zip(values_gen).to_h
 
-    values_gen = Array.new(6) {0}
-    @effort_values = Hash[keys.zip(values_gen)]
+    values_gen = Array.new(6) { 0 }
+    @effort_values = keys.zip(values_gen).to_h
 
     set_exp
     gen_new_stats
-
   end
 
   def prepare_for_battle
@@ -57,7 +63,7 @@ class Pokemon
   end
 
   def set_current_move(move)
-    @current_move = Pokedex::MOVES.select { |key, value| key == move}
+    @current_move = Pokedex::MOVES.select { |key, _value| key == move }
     @current_move = @current_move[move]
   end
 
@@ -69,7 +75,7 @@ class Pokemon
     puts "#{@name.upcase.colorize(:yellow)} used #{@current_move[:name].upcase.colorize(:light_red)}"
     # Accuracy check
     hit = accuracy_check
-    if hit                          # If the movement is not missed
+    if hit # If the movement is not missed
       damage = damage_amount(target)
       if critical_hit
         damage *= 1.5
@@ -96,13 +102,13 @@ class Pokemon
     else
       case @growth_rate
       when :slow
-        @exp = ((5 * (@level)**3) / 4.0).floor
+        @exp = ((5 * (@level**3)) / 4.0).floor
       when :medium_slow
-        @exp = (6 / 5.0 * (@level)**3 - 15 * (@level)**2 + 100 * (@level) - 140).floor
+        @exp = ((6 / 5.0 * (@level**3)) - (15 * (@level**2)) + (100 * @level) - 140).floor
       when :medium_fast
-        @exp = ((@level)**3).floor
+        @exp = (@level**3).floor
       when :fast
-        @exp = (4 * (@level)**3 / 5.0).floor
+        @exp = (4 * (@level**3) / 5.0).floor
       end
     end
   end
@@ -110,13 +116,13 @@ class Pokemon
   def levelup(exp_gained)
     case @growth_rate
     when :slow
-      next_level_exp = ((5 * (@level + 1)**3) / 4.0).floor
+      next_level_exp = ((5 * ((@level + 1)**3)) / 4.0).floor
     when :medium_slow
-      next_level_exp = (6 / 5.0 * (@level + 1)**3 - 15 * (@level + 1)**2 + 100 * (@level + 1) - 140).floor
+      next_level_exp = ((6 / 5.0 * ((@level + 1)**3)) - (15 * ((@level + 1)**2)) + (100 * (@level + 1)) - 140).floor
     when :medium_fast
       next_level_exp = ((@level + 1)**3).floor
     when :fast
-      next_level_exp = (4 * (@level + 1)**3 / 5.0).floor
+      next_level_exp = (4 * ((@level + 1)**3) / 5.0).floor
     end
     @exp += exp_gained
     if @exp >= next_level_exp
@@ -126,7 +132,7 @@ class Pokemon
   end
 
   def increase_stats(target)
-    exp_gained = (target.base_exp * target.level/ 7.00).floor
+    exp_gained = (target.base_exp * target.level / 7.00).floor
     puts "#{@name.upcase.colorize(:yellow)} gained #{exp_gained.to_s.colorize(:green)} experience points"
     levelup(exp_gained)
 
@@ -138,11 +144,11 @@ class Pokemon
 
   # private methods:
   def accuracy_check
-    hit = @current_move[:accuracy] >= rand(0..100) ? true : false
+    hit = @current_move[:accuracy] >= rand(0..100)
   end
 
   def critical_hit
-    true if 1 == rand(1..16)
+    true if rand(1..16) == 1
   end
 
   def hit_effectiveness(target)
@@ -160,8 +166,8 @@ class Pokemon
 
   def damage_amount(target)
     special_moves = Pokedex::SPECIAL_MOVE_TYPE
-    if special_moves.include?(@current_move[:type]) then offensive_stat = @current_stats[:special_attack] else offensive_stat = @current_stats[:attack] end
-    if special_moves.include?(@current_move[:type]) then target_defensive_stat = target.current_stats[:special_defense] else target_defensive_stat = target.current_stats[:defense] end
+    special_moves.include?(@current_move[:type]) ? (offensive_stat = @current_stats[:special_attack]) : (offensive_stat = @current_stats[:attack])
+    special_moves.include?(@current_move[:type]) ? (target_defensive_stat = target.current_stats[:special_defense]) : (target_defensive_stat = target.current_stats[:defense])
     damage = (((2 * level / 5.0 * 2).floor * offensive_stat * @current_move[:power] / target_defensive_stat).floor / 50.0).floor + 2
   end
 end

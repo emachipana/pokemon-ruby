@@ -1,6 +1,6 @@
 # require neccesary files
-require_relative 'pokedex/pokemons'
-require_relative 'pokemon'
+require_relative "pokedex/pokemons"
+require_relative "pokemon"
 
 class Player
   attr_reader :name, :my_pokemon
@@ -20,7 +20,7 @@ class Player
       print "Invalid move, try again:\n> "
       move = gets.chomp.downcase
       puts
-    end 
+    end
     move
   end
 end

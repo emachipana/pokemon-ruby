@@ -1,9 +1,8 @@
 class Battle
-
   def initialize(player, bot)
     @player = player
     @bot = bot
-    @player_pokemon = @player.my_pokemon 
+    @player_pokemon = @player.my_pokemon
     @bot_pokemon = @bot.my_pokemon
   end
 
@@ -14,15 +13,15 @@ class Battle
     puts "#{@player.name.upcase.colorize(:yellow)} sent out #{@player_pokemon.name.upcase.colorize(:yellow)}!"
     @player_pokemon.prepare_for_battle
     @bot_pokemon.prepare_for_battle
-    puts (("-" * 19) + "Battle Start!" + ("-" * 19)).colorize(:red)
+    puts ("#{'-' * 19}Battle Start!#{'-' * 19}").colorize(:red)
     # Until one pokemon faints
     until @player_pokemon.fainted? || @bot_pokemon.fainted?
-      battle_status   # --Print Battle Status
+      battle_status # --Print Battle Status
       ask_move
       user_move = @player.select_move(@player_pokemon)
       system("clear")
       user_move = @player_pokemon.set_current_move(user_move)
-      
+
       bot_move = @bot.select_move(@bot_pokemon)
       bot_move = @bot_pokemon.set_current_move(bot_move)
       first_move, second_move = order(user_move, bot_move)
@@ -34,17 +33,17 @@ class Battle
 
       @fighter2.set_current_move(second_move[:name])
       puts ("-" * 50).colorize(:light_white)
-      @fighter2.attack(@fighter1) 
+      @fighter2.attack(@fighter1)
       puts ("-" * 50).colorize(:light_white)
-    end                                                    # Check which player won and print messages
+    end
     winner = @fighter1.fainted? ? @fighter2 : @fighter1
     loser = @fighter1.fainted? ? @fighter1 : @fighter2
     puts "#{loser.name.upcase} fainted!".colorize(background: :light_black, color: :light_white) # --If first is fainted, print fainted message
     puts "-" * 50
-    puts "#{winner.name.upcase} WINS!\n".colorize(background: :light_white, color: :red )
+    puts "#{winner.name.upcase} WINS!\n".colorize(background: :light_white, color: :red)
 
-    @player_pokemon.increase_stats(@bot_pokemon) if winner == @player_pokemon # If the winner is the Player increase pokemon stats
- 
+    @player_pokemon.increase_stats(@bot_pokemon) if winner == @player_pokemon
+
     winner
   end
 
@@ -76,29 +75,26 @@ class Battle
       first_move = bot_move
       @fighter2 = @player_pokemon
       second_move = user_move
+    elsif @player_pokemon.current_stats[:speed] > @bot_pokemon.current_stats[:speed]
+      @fighter1 = @player_pokemon
+      first_move = user_move
+      @fighter2 = @bot_pokemon
+      second_move = bot_move
+    elsif @player_pokemon.current_stats[:speed] < @bot_pokemon.current_stats[:speed]
+      @fighter1 = @bot_pokemon
+      first_move = bot_move
+      @fighter2 = @player_pokemon
+      second_move = user_move
     else
-      if @player_pokemon.current_stats[:speed] > @bot_pokemon.current_stats[:speed]
-        @fighter1 = @player_pokemon
-        first_move = user_move
-        @fighter2 = @bot_pokemon
-        second_move = bot_move
-      elsif @player_pokemon.current_stats[:speed] < @bot_pokemon.current_stats[:speed]
-        @fighter1 = @bot_pokemon
-        first_move = bot_move
-        @fighter2 = @player_pokemon
-        second_move = user_move
-      else
-        players = [@player_pokemon, @bot_pokemon]
-        @fighter1 = players.shuffle[rand(0..1)]
-        first_move = user_move if @fighter1 == @player_pokemon
-        first_move = bot_move if @fighter1 == @bot_pokemon
-        @fighter2 = players.select { |player| player != @fighter1 }
-        @fighter2 = @fighter2[0]
-        second_move = user_move if @fighter2 == @player_pokemon
-        second_move = bot_move if @fighter2 == @bot_pokemon
-      end
+      players = [@player_pokemon, @bot_pokemon]
+      @fighter1 = players.shuffle[rand(0..1)]
+      first_move = user_move if @fighter1 == @player_pokemon
+      first_move = bot_move if @fighter1 == @bot_pokemon
+      @fighter2 = players.reject { |player| player == @fighter1 }
+      @fighter2 = @fighter2[0]
+      second_move = user_move if @fighter2 == @player_pokemon
+      second_move = bot_move if @fighter2 == @bot_pokemon
     end
     [first_move, second_move]
   end
-
 end
