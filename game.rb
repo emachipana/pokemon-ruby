@@ -74,10 +74,10 @@ class Game
     puts "\nYour very own POKEMON legend is about to unfold! A world of\ndreams and adventures with POKEMON awaits! Let's go!\nHere, #{@player.name.upcase.colorize(:yellow)}! There are 3 POKEMON here! Haha!"
     puts "When I was young, I was a serious POKEMON trainer.\nIn my old age, I have only 3 left, but you can have one! Choose!\n"
     print "\n1. #{Pokedex::POKEMONS[opt1][:species].colorize(:green)}    2. #{Pokedex::POKEMONS[opt2][:species].colorize(:red)}    3. #{Pokedex::POKEMONS[opt3][:species].colorize(:light_blue)}\n> "
-    pokemon_choice = gets.chomp
+    pokemon_choice = gets.chomp.capitalize
     until [opt1, opt2, opt3].include?(pokemon_choice)
       print "You can only choose among these 3! Try again:\n> "
-      pokemon_choice = gets.chomp
+      pokemon_choice = gets.chomp.capitalize
     end
     puts "\nYou selected #{Pokedex::POKEMONS[pokemon_choice][:species].upcase.colorize(:yellow)}. Great choice!"
     print "Give your pokemon a name?\n> "
