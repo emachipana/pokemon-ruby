@@ -127,7 +127,7 @@ class Game
     if action == "Fight"
       new_battle = Battle.new(@player, gym_leader)
       winner = new_battle.start
-      puts "Congratulation! You have won the game!\nYou can continue training your Pokemon if you want" if winner == @player.my_pokemon
+      puts "Congratulations! You have won the game!\nYou can continue training your Pokemon if you want" if winner == @player.my_pokemon
     else
       system("clear")
     end
