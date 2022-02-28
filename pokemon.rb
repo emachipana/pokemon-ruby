@@ -66,27 +66,27 @@ class Pokemon
   end
 
   def attack(target)
-    puts "#{@name} used #{@current_move[:name].upcase}"
+    puts "#{@name.upcase.colorize(:yellow)} used #{@current_move[:name].upcase.colorize(:light_red)}"
     # Accuracy check
     hit = accuracy_check
     if hit                          # If the movement is not missed
       damage = damage_amount(target)
       if critical_hit
         damage *= 1.5
-        puts "It was a CRITICAL hit!"
+        puts "It was a CRITICAL hit!".colorize(color: :light_white, background: :red)
       end
       effectiveness = hit_effectiveness(target)
       if effectiveness <= 0.5
-        puts "It's not very effective..."
+        puts "It's not very effective...".colorize(color: :black, background: :light_white)
       elsif effectiveness >= 1.5
-        puts "It's super effective!"
+        puts "It's super effective!".colorize(color: :light_yellow, background: :red)
       end
       damage *= effectiveness
       damage = damage.round
       target.receive_damage(damage)
-      puts "And it hit #{target.name.upcase} with #{damage} damage"
+      puts "And it hit #{target.name.upcase.colorize(:light_yellow)} with #{damage.to_s.colorize(:light_red)} damage!"
     else
-      puts "But it MISSED!"
+      puts "But it MISSED!".colorize(background: :light_black, color: :red)
     end
   end
 
@@ -121,13 +121,13 @@ class Pokemon
     @exp += exp_gained
     if @exp >= next_level_exp
       @level += 1
-      puts "#{@name} reached level #{@level}!"
+      puts "#{@name.upcase.colorize(:yellow)} reached level #{@level.to_s.colorize(:green)}!\n"
     end
   end
 
   def increase_stats(target)
     exp_gained = (target.base_exp * target.level/ 7.00).floor
-    puts "#{@name} gained #{exp_gained} experience points"
+    puts "#{@name.upcase.colorize(:yellow)} gained #{exp_gained.to_s.colorize(:green)} experience points"
     levelup(exp_gained)
 
     new_effort_point_name = target.effort_points[:type]

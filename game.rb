@@ -1,5 +1,5 @@
 # require neccesary files
-
+require 'colorize'
 require_relative "player"
 require_relative "pokemon"
 require_relative "pokedex/pokemons"
@@ -40,11 +40,11 @@ class Game
   end
 
   def header #The intro header for the game
-    puts "$#" * 30
-    puts ("$#" * 7) + ("  " * 16) + ("$#" * 7)
-    puts ("#$##$##$##$ ---" ) + (" " * 9) + ("Pokemon Ruby") + (" " * 9) + ("--- #$##$##$#$#")
-    puts ("$#" * 7) + ("  " * 16) + ("$#" * 7)
-    puts "$#" * 30 + "\n"
+    puts ("$#" * 30).colorize(color: :black, background: :red)
+    puts (("$#" * 7) + ("  " * 16) + ("$#" * 7)).colorize(color: :black, background: :red)
+    puts (("#$##$##$##$ ---" ) + (" " * 9) + ("Pokemon Ruby") + (" " * 9) + ("--- #$##$##$#$#")).colorize(color: :black, background: :red)
+    puts (("$#" * 7) + ("  " * 16) + ("$#" * 7)).colorize(color: :black, background: :red)
+    puts ("$#" * 30 + "\n").colorize(color: :black, background: :red)
   end
 
   def intro
@@ -53,33 +53,33 @@ class Game
   end
 
   def getplayername                        #Internal Class method to get the player's name and initialize the player instance.
-    print "\nFirst, what is your name?\n> "
+    print "\nFirst, what is your name?\n> ".colorize(:yellow)
     player_name = gets.chomp.capitalize
     while player_name.empty?
       print "You have to enter your name! Try again:\n> "
       player_name = gets.chomp
     end
     @player = Player.new(player_name)
-    puts "Right so your name is #{@player.name.upcase}!"
+    puts "Right so your name is #{@player.name.upcase.colorize(:yellow)}!"
   end
 
   def new_pokemon_info            # Internal Class method to get the players pokemon
     opt1 = "Bulbasaur"      # Starting options handled separately
     opt2 = "Charmander"
     opt3 = "Squirtle"
-  puts "\nYour very own POKEMON legend is about to unfold! A world of\ndreams and adventures with POKEMON awaits! Let's go!\nHere, #{@player.name.upcase}! There are 3 POKEMON here! Haha!"
+  puts "\nYour very own POKEMON legend is about to unfold! A world of\ndreams and adventures with POKEMON awaits! Let's go!\nHere, #{@player.name.upcase.colorize(:yellow)}! There are 3 POKEMON here! Haha!"
   puts "When I was young, I was a serious POKEMON trainer.\nIn my old age, I have only 3 left, but you can have one! Choose!\n"
-  print "\n1. #{Pokedex::POKEMONS[opt1][:species]}    2. #{Pokedex::POKEMONS[opt2][:species]}    3. #{Pokedex::POKEMONS[opt3][:species]}\n> "
+  print "\n1. #{Pokedex::POKEMONS[opt1][:species].colorize(:green)}    2. #{Pokedex::POKEMONS[opt2][:species].colorize(:red)}    3. #{Pokedex::POKEMONS[opt3][:species].colorize(:light_blue)}\n> "
   pokemon_choice = gets.chomp
     until [opt1,opt2,opt3].include? (pokemon_choice)
       print "You can only choose among these 3! Try again:\n> "
       pokemon_choice = gets.chomp
     end
-    puts "\nYou selected #{Pokedex::POKEMONS[pokemon_choice][:species].upcase}. Great choice!"
+    puts "\nYou selected #{Pokedex::POKEMONS[pokemon_choice][:species].upcase.colorize(:yellow)}. Great choice!"
     print "Give your pokemon a name?\n> "
     poke_name = gets.chomp.capitalize
     poke_name = Pokedex::POKEMONS[pokemon_choice][:species] if poke_name.empty?
-    puts "#{@player.name.upcase}, raise your young #{poke_name.upcase} by making it fight"
+    puts "#{@player.name.upcase.colorize(:yellow)}, raise your young #{poke_name.upcase.colorize(:yellow)} by making it fight"
     puts "When you feel readt you can challenge BROCK, the PEWTER's GYM LEADER"  
     [pokemon_choice, poke_name]
   end
@@ -100,8 +100,8 @@ class Game
     train_bot = Bot.new
     train_bot.give_pokemon(name, name, bot_level)
   
-    puts "#{player.name} challenge #{train_bot.name} for training"
-    puts "#{train_bot.name} has a #{train_bot.my_pokemon.species} level #{train_bot.my_pokemon.level}"
+    puts "#{player.name.upcase.colorize(:yellow)} challenge #{train_bot.name.colorize(:red)} for training"
+    puts "#{train_bot.name.colorize(:red)} has a #{train_bot.my_pokemon.species.colorize(:red)} level #{train_bot.my_pokemon.level.to_s.colorize(:light_red)}"
     puts "What do you want to do now?"
     puts "\n1. Fight        2.Leave"
     action = fight_action
@@ -115,11 +115,12 @@ class Game
   end
 
   def challenge_leader
-    gym_leader = Bot.new("Brock")
+    name = "Brock"
+    gym_leader = Bot.new(name)
     level = 10
     gym_leader.give_pokemon("Onix", "Onix", level)
-    puts "#{player.name} challenge Gym Leader #{gym_leader.name} for a fight!"
-    puts "#{gym_leader.name} has a #{gym_leader.my_pokemon.species} level #{gym_leader.my_pokemon.level}"
+    puts "#{player.name.upcase.colorize(:yellow)} challenge Gym Leader #{gym_leader.name.upcase.colorize(:red)} for a fight!"
+    puts "#{gym_leader.name.colorize(:red)} has a #{gym_leader.my_pokemon.species.colorize(:red)} level #{gym_leader.my_pokemon.level.to_s.colorize(:light_red)}"
     puts "What do you want to do now?"
     puts "\n1. Fight        2.Leave"
     action = fight_action
@@ -135,18 +136,18 @@ class Game
 
   def show_stats
     system("clear")
-    puts "#{player.my_pokemon.name}:"
+    puts "#{player.my_pokemon.name}:".colorize(:yellow)
     puts "Kind: #{player.my_pokemon.species}"
-    puts "Level: #{player.my_pokemon.level}"
+    puts "Level: #{player.my_pokemon.level.to_s.colorize(:light_green)}"
     puts "Type: #{player.my_pokemon.type.join("/").to_s}"
-    puts "Stats:"
-    puts "HP: #{player.my_pokemon.current_stats[:hp]}"
-    puts "Attack: #{player.my_pokemon.current_stats[:attack]}"
-    puts "Defense: #{player.my_pokemon.current_stats[:defense]}"
-    puts "Special Attack: #{player.my_pokemon.current_stats[:special_attack]}"
-    puts "Special Defense: #{player.my_pokemon.current_stats[:special_defense]}"
-    puts "Speed: #{player.my_pokemon.current_stats[:speed]}"
-    puts "Experience Points: #{player.my_pokemon.exp}"
+    puts "Stats:".colorize(:light_blue)
+    puts "HP: #{player.my_pokemon.current_stats[:hp].to_s.colorize(:light_green)}"
+    puts "Attack: #{player.my_pokemon.current_stats[:attack].to_s.colorize(:light_green)}"
+    puts "Defense: #{player.my_pokemon.current_stats[:defense].to_s.colorize(:light_green)}"
+    puts "Special Attack: #{player.my_pokemon.current_stats[:special_attack].to_s.colorize(:light_green)}"
+    puts "Special Defense: #{player.my_pokemon.current_stats[:special_defense].to_s.colorize(:light_green)}"
+    puts "Speed: #{player.my_pokemon.current_stats[:speed].to_s.colorize(:light_green)}"
+    puts "Experience Points: #{player.my_pokemon.exp.to_s.colorize(:light_green)}"
   end
 
   def goodbye
@@ -156,8 +157,8 @@ class Game
   end
 
   def menu
-    puts ("-" * 26) + ("Menu") + ("-" * 26)
-    puts "\n1. Stats        2. Train        3. Leader       4. Exit"
+    puts (("-" * 26) + ("Menu") + ("-" * 26)).colorize(color: :black, background: :red)
+    puts "\n1. Stats        2. Train        3. Leader       4. Exit".colorize(:light_red)
     action = getaction
   end
 

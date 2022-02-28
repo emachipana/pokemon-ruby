@@ -10,11 +10,11 @@ class Battle
   def start
     # Prepare the Battle (print messages and prepare pokemons)
     system("clear")
-    puts "#{@bot.name.upcase} sent out #{@bot_pokemon.name.upcase}!"
-    puts "#{@player.name.upcase} sent out #{@player_pokemon.name.upcase}!"
+    puts "#{@bot.name.upcase.colorize(:red)} sent out #{@bot_pokemon.name.upcase.colorize(:red)}!"
+    puts "#{@player.name.upcase.colorize(:yellow)} sent out #{@player_pokemon.name.upcase.colorize(:yellow)}!"
     @player_pokemon.prepare_for_battle
     @bot_pokemon.prepare_for_battle
-    puts ("-" * 19) + "Battle Start!" + ("-" * 19)
+    puts (("-" * 19) + "Battle Start!" + ("-" * 19)).colorize(:red)
     # Until one pokemon faints
     until @player_pokemon.fainted? || @bot_pokemon.fainted?
       battle_status   # --Print Battle Status
@@ -28,20 +28,20 @@ class Battle
       first_move, second_move = order(user_move, bot_move)
 
       @fighter1.set_current_move(first_move[:name])
-      puts "-" * 50
+      puts ("-" * 50).colorize(:light_white)
       @fighter1.attack(@fighter2)
       break if @fighter2.fainted?
 
       @fighter2.set_current_move(second_move[:name])
-      puts "-" * 50
+      puts ("-" * 50).colorize(:light_white)
       @fighter2.attack(@fighter1) 
-      puts "-" * 50
+      puts ("-" * 50).colorize(:light_white)
     end                                                    # Check which player won and print messages
     winner = @fighter1.fainted? ? @fighter2 : @fighter1
     loser = @fighter1.fainted? ? @fighter1 : @fighter2
-    puts "#{loser.name} fainted!" # --If first is fainted, print fainted message
+    puts "#{loser.name.upcase} fainted!".colorize(background: :light_black, color: :light_white) # --If first is fainted, print fainted message
     puts "-" * 50
-    puts "#{winner.name} WINS!"
+    puts "#{winner.name.upcase} WINS!\n".colorize(background: :light_white, color: :red )
 
     @player_pokemon.increase_stats(@bot_pokemon) if winner == @player_pokemon # If the winner is the Player increase pokemon stats
  
@@ -50,13 +50,13 @@ class Battle
 
   def battle_status
     puts "#{@player.name}'s #{@player_pokemon.name} - Level #{@player_pokemon.level}"
-    puts "HP: #{@player_pokemon.current_hp}"
+    puts "HP: #{@player_pokemon.current_hp.to_s.colorize(:light_green)}"
     puts "#{@bot.name}'s #{@bot_pokemon.name} - Level #{@bot_pokemon.level}"
-    puts "HP: #{@bot_pokemon.current_hp}"
+    puts "HP: #{@bot_pokemon.current_hp.to_s.colorize(:light_green)}"
   end
 
   def ask_move
-    puts "\n#{@player.name}, select your move: "
+    puts "\n#{@player.name.upcase.colorize(:yellow)}, select your move: "
     puts
     @player_pokemon.moves.each_with_index do |move, index|
       print "#{index + 1}. #{move}     "
