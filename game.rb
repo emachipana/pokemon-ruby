@@ -105,10 +105,11 @@ class Game
     puts "What do you want to do now?"
     puts "\n1. Fight        2.Leave"
     action = fight_action
-    if action == "Fight" || action == "fight"
+    if action == "Fight"
       new_battle = Battle.new(@player, train_bot)
       new_battle.start
     else
+      system("clear")
     end
     train_bot = nil
   end
@@ -122,11 +123,12 @@ class Game
     puts "What do you want to do now?"
     puts "\n1. Fight        2.Leave"
     action = fight_action
-    if action == "Fight" || action == "fight"
+    if action == "Fight"
       new_battle = Battle.new(@player, gym_leader)
       winner = new_battle.start
       puts "Congratulation! You have won the game!\nYou can continue training your Pokemon if you want" if winner == @player.my_pokemon
     else
+      system("clear")
     end
     gym_leader = nil
   end
@@ -161,11 +163,11 @@ class Game
 
   def fight_action
     print "> "
-    act = gets.chomp
+    act = gets.chomp.capitalize
     puts
     until @fight_commands.include? act
       print "Invalid action, try again:\n> "
-      act = gets.chomp
+      act = gets.chomp.capitalize
       puts
     end
     act
@@ -177,9 +179,10 @@ class Game
     puts
     until @commands.include? act
       print "Invalid action, try again:\n> "
-      act = gets.chomp
+      act = gets.chomp.capitalize
       puts
     end
+    system("clear")
     act
   end
 

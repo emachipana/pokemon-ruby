@@ -9,6 +9,7 @@ class Battle
 
   def start
     # Prepare the Battle (print messages and prepare pokemons)
+    system("clear")
     puts "#{@bot.name.upcase} sent out #{@bot_pokemon.name.upcase}!"
     puts "#{@player.name.upcase} sent out #{@player_pokemon.name.upcase}!"
     @player_pokemon.prepare_for_battle
@@ -19,6 +20,7 @@ class Battle
       battle_status   # --Print Battle Status
       ask_move
       user_move = @player.select_move(@player_pokemon)
+      system("clear")
       user_move = @player_pokemon.set_current_move(user_move)
       
       bot_move = @bot.select_move(@bot_pokemon)

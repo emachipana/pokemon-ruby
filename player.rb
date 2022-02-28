@@ -18,9 +18,9 @@ class Player
     move = gets.chomp.downcase
     until player_pokemon.moves.include? move
       print "Invalid move, try again:\n> "
-      move = gets.chomp
+      move = gets.chomp.downcase
       puts
-    end
+    end 
     move
   end
 end
