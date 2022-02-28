@@ -86,7 +86,7 @@ class Game
 
   def select_pokemon        # Generate player's pokemon
     choice, name = new_pokemon_info
-    @player.give_pokemon(choice, name, level = 10)
+    @player.give_pokemon(choice, name, level = 1)
   end
 
   def train
