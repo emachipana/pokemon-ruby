@@ -69,6 +69,27 @@ module Pokedex
       power: 50,
       accuracy: 90,
       priority: 0
+    },
+    "absorb" => {
+      name: "absorb",
+      type: :grass,
+      power: 20,
+      accuracy: 100,
+      priority: 0
+    },
+    "astonish" => {
+      name: "astonish",
+      type: "ghost",
+      power: 30,
+      accuracy: 100,
+      priority: 0
+    },
+    "covet" => {
+      name: "covet",
+      type: "normal",
+      power: 60,
+      accuracy: 100,
+      priority: 0
     }
   }.freeze
 

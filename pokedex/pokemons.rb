@@ -62,6 +62,24 @@ module Pokedex
       growth_rate: :medium_fast,
       base_stats: { hp: 35, attack: 45, defense: 160, special_attack: 30, special_defense: 45, speed: 70 },
       moves: ["tackle", "rock throw"]
+    },
+    "Zubat" => {
+      species: "Zubat",
+      type: %i[poison flying],
+      base_exp: 49,
+      effort_points: { type: :speed, amount: 1 },
+      growth_rate: :medium_fast,
+      base_stats: { hp: 40, attack: 45, defense: 35, special_attack: 30, special_defense: 40, speed: 55 },
+      moves: ["absorb", "astonish"]
+    },
+    "Mankley" => {
+      species: "Mankley",
+      type: %i[fighting],
+      base_exp: 61,
+      effort_points: { type: :attack, amount: 1 },
+      growth_rate: :medium_fast,
+      base_stats: { hp: 40, attack: 80, defense: 35, special_attack: 35, special_defense: 45, speed: 70 },
+      moves: ["covet", "scratch"]
     }
   }.freeze
 

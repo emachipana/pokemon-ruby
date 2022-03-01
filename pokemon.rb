@@ -25,7 +25,7 @@ class Pokemon
 
   attr_reader :species, :type, :growth_rate, :moves, :ind_values, :base_exp
   attr_accessor :name, :exp, :effort_values, :effort_points, :base_stats, :level, :current_stats, :current_hp,
-                :current_move
+                :current_move, :next_level_exp
 
   def initialize(choice, name, level)
     poke = Pokedex::POKEMONS[choice]
@@ -49,6 +49,7 @@ class Pokemon
     values_gen = Array.new(6) { 0 }
     @effort_values = keys.zip(values_gen).to_h
 
+    @next_level_exp = set_next_level
     set_exp
     gen_new_stats
   end
@@ -114,20 +115,13 @@ class Pokemon
   end
 
   def levelup(exp_gained)
-    case @growth_rate
-    when :slow
-      next_level_exp = ((5 * ((@level + 1)**3)) / 4.0).floor
-    when :medium_slow
-      next_level_exp = ((6 / 5.0 * ((@level + 1)**3)) - (15 * ((@level + 1)**2)) + (100 * (@level + 1)) - 140).floor
-    when :medium_fast
-      next_level_exp = ((@level + 1)**3).floor
-    when :fast
-      next_level_exp = (4 * ((@level + 1)**3) / 5.0).floor
-    end
+    set_next_level
     @exp += exp_gained
-    if @exp >= next_level_exp
+    while @exp >= @next_level_exp
       @level += 1
       puts "#{@name.upcase.colorize(:yellow)} reached level #{@level.to_s.colorize(:green)}!\n"
+    set_next_level
+    break if @exp < @next_level_exp
     end
   end
 
@@ -170,4 +164,18 @@ class Pokemon
     special_moves.include?(@current_move[:type]) ? (target_defensive_stat = target.current_stats[:special_defense]) : (target_defensive_stat = target.current_stats[:defense])
     damage = (((2 * level / 5.0 * 2).floor * offensive_stat * @current_move[:power] / target_defensive_stat).floor / 50.0).floor + 2
   end
+
+  def set_next_level
+    case @growth_rate
+    when :slow
+      @next_level_exp = ((5 * ((@level + 1)**3)) / 4.0).floor
+    when :medium_slow
+      @next_level_exp = ((6 / 5.0 * ((@level + 1)**3)) - (15 * ((@level + 1)**2)) + (100 * (@level + 1)) - 140).floor
+    when :medium_fast
+      @next_level_exp = ((@level + 1)**3).floor
+    when :fast
+      @next_level_exp = (4 * ((@level + 1)**3) / 5.0).floor
+    end
+  end
+
 end

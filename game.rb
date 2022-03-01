@@ -152,7 +152,7 @@ class Game
     puts "Special Attack: #{player.my_pokemon.current_stats[:special_attack].to_s.colorize(:light_green)}"
     puts "Special Defense: #{player.my_pokemon.current_stats[:special_defense].to_s.colorize(:light_green)}"
     puts "Speed: #{player.my_pokemon.current_stats[:speed].to_s.colorize(:light_green)}"
-    puts "Experience Points: #{player.my_pokemon.exp.to_s.colorize(:light_green)}"
+    puts "Experience Points: #{player.my_pokemon.exp.to_s.colorize(:light_white)}/#{player.my_pokemon.next_level_exp.to_s.colorize(:light_green)}"
   end
 
   def goodbye
